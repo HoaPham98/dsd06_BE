@@ -9,7 +9,7 @@ module.exports = () => {
 
     const statFeeFixing = (req, res, next) => {
         const {from, to, payload} = req.query
-        let predict = {}
+        let predict = {type: 'fixing'}
         if (from && to) {
             predict.startedAt = { $gte: from, $lte: to }
         } else if (from) {
@@ -18,12 +18,11 @@ module.exports = () => {
             predict.startedAt = { $lte: to }
         }
 
-        let query = { type: 'fixing' }
         if (payload) {
-            query.payload = payload
+            predict.payload = payload
         }
 
-        Logging.find(query).populate('payload', { _id: 1, code: 1, name: 1})
+        Logging.find(predict).populate('payload', { _id: 1, code: 1, name: 1})
         .exec((e, result) => {
             if (e) {
                 next(e)
@@ -35,7 +34,7 @@ module.exports = () => {
 
     const statFeeWorking = (req, res, next) => {
         const {from, to, payload} = req.query
-        let predict = {}
+        let predict = { type: 'working' }
         if (from && to) {
             predict.startedAt = { $gte: from, $lte: to }
         } else if (from) {
@@ -44,12 +43,11 @@ module.exports = () => {
             predict.startedAt = { $lte: to }
         }
 
-        let query = { type: 'working' }
         if (payload) {
-            query.payload = payload
+            predict.payload = payload
         }
 
-        Logging.find(query).populate('payload', { _id: 1, code: 1, name: 1})
+        Logging.find(predict).populate('payload', { _id: 1, code: 1, name: 1})
         .exec((e, result) => {
             if (e) {
                 next(e)
