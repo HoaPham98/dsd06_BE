@@ -32,7 +32,7 @@ module.exports = () => {
   // =========
   const readMany = (req, res, next) => {
     let query = req.query || {};
-    Collection.find(query, (e,result) => {
+    Collection.find(query).populate('type').exec((e,result) => {
       if(e) {
         next(e)
       } else {
