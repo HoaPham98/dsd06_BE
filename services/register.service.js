@@ -49,7 +49,7 @@ module.exports = () => {
 
     const registerDrone = async (req, res, next) => {
         const { _id } = req.params;
-        const { reason, droneId } = req.body;
+        const { reason, droneId, config } = req.body;
 
         if (droneId == null) {
             next(Error("droneId is required"));
@@ -69,7 +69,7 @@ module.exports = () => {
                 throw new Error("This payload is not idle. Please check again");
             }
             let log = await Logging.create(data)
-            Collection.updateOne({ _id: _id }, { $set: { status: 'working' }, $addToSet: { histories: log._id } }, (e) => {
+            Collection.updateOne({ _id: _id }, { $set: { status: 'working', config: config }, $addToSet: { histories: log._id } }, (e) => {
                 if (e)
                     next(e)
                 else
