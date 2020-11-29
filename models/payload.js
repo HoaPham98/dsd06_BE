@@ -33,13 +33,18 @@ const PayloadSchema = new Schema({
     type: {type: ObjectId, ref: 'PayloadType', required: true },
     status: { type: String, enum: ['working', 'idle', 'fixing'], required: true },
     histories: [{type: ObjectId, ref: 'PayloadLogging', required: true}],
-    config: {
-        panning: {type: Number, required: true },
-        tilting: {type: Number, required: true },
-        zoom: {type: Number, required: true },
-        autoTracking: {type: Boolean, required: true },
-        shotInterval: Number
-    }
+    configs: [{
+        startTime: {type: String, required: true},
+        endTime: {type: String, required: true},
+        object: {type: String, required: true},
+        config: {
+            panning: {type: Number, required: true },
+            tilting: {type: Number, required: true },
+            zoom: {type: Number, required: true },
+            autoTracking: {type: Boolean, required: true },
+            shotInterval: Number
+        }
+    }]
 });
 
 const PayloadTypeSchema = new Schema({
