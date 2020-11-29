@@ -24,6 +24,7 @@ app.use('/api/payloadtype', require('./crud')(models.PayloadType));
 app.use('/api/payload', require('./services/payload.service')());
 app.use('/api/payloadregister', require('./services/register.service')());
 app.use('/api/payloadStat', require('./services/statistic.service')());
+app.use('/api/payloadMetadata', require('./services/metadata.service')());
 
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
