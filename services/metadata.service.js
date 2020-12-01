@@ -30,6 +30,12 @@ module.exports = () => {
 
         return `Khu trồng ${item}`;
     }
+
+    const randomDayDien = () => {
+        let km = Math.floor(Math.random() * 200);
+
+        return `Dây điện, km số ${km}`;
+    }
  
     const getMetadata = async (req, res, next) => {
         const { _id } = req.params;
@@ -66,9 +72,42 @@ module.exports = () => {
         })
     }
 
+    const getImage = async (req, res, next) => {
+        const { _id } = req.params;
+
+        
+        let payload = await Collection.findOne({_id: _id, status: "working"})
+        if (!payload) {
+            throw new Error("This payload is not working. Please try later")
+        }
+
+        var arr = []
+
+        for (var i = 1; i <= 104; i++) {
+            var url = `https://res.cloudinary.com/webtt20191/image/upload/v1606833551/day-dien-cao-the/day-dien-${i}.jpg`
+            var objective = randomDayDien()
+
+            let data = {
+                image: url,
+                object: objective,
+                config: {
+                    panning: Math.floor(Math.random() * 341),
+                    tilting: Math.floor(Math.random() * 111),
+                    zoom: Math.floor(Math.random() * 11),
+                    autoTracking: Boolean(Math.floor(Math.random() * 101) % 2),
+                    shotInterval: Math.floor(Math.random() * 11) * 1000
+                }
+            }
+            arr.push(data)
+        }
+
+        res.json(arr)
+    }
+
     let router = express.Router();
     
-    router.get('/:_id', getMetadata);
+    router.get('/metadata/:_id', getMetadata);
+    router.get('/image/:_id', getImage)
 
     return router;
 }
