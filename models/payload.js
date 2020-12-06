@@ -31,7 +31,7 @@ const PayloadSchema = new Schema({
         }
     },
     type: {type: ObjectId, ref: 'PayloadType', required: true },
-    status: { type: String, enum: ['working', 'idle', 'fixing'], required: true },
+    status: { type: String, enum: ['working', 'idle', 'fixing', 'charging'], required: true },
     histories: [{type: ObjectId, ref: 'PayloadLogging', required: true}],
     configs: [{
         startTime: {type: String, required: true},
@@ -58,14 +58,21 @@ const PayloadLoggingSchema = new Schema({
     payload: {type: ObjectId, ref: 'Payload', required: true},
     startedAt: Date,
     finishedAt: Date,
-    type: { type: String, enum: ['working', 'idle', 'fixing'], required: true },
+    type: { type: String, enum: ['working', 'idle', 'fixing', 'charging'], required: true },
     reason: String,
     droneId: String,
     fee: Number
 });
 
+const SDCardSchema = new Schema({
+    id: ObjectId,
+    name: {type: String, required: true},
+    volume: {type: Number, required: true}
+})
+
 module.exports = {
     Payload: mongoose.model('Payload', PayloadSchema, 'Payload'),
     PayloadType: mongoose.model('PayloadType', PayloadTypeSchema, 'PayloadType'),
-    PayloadLogging: mongoose.model('PayloadLogging', PayloadLoggingSchema, 'PayloadLogging')
+    PayloadLogging: mongoose.model('PayloadLogging', PayloadLoggingSchema, 'PayloadLogging'),
+    SDCard: mongoose.model('SDCard', SDCardSchema, 'SDCard')
 }

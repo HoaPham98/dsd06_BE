@@ -57,7 +57,8 @@ module.exports = () => {
         }
         let payload = await Collection.findOne({_id: _id, status: "working"})
         if (!payload) {
-            throw new Error("This payload is not working. Please try later")
+            next(new Error("This payload is not working. Please try later"));
+            return;
         }
 
         res.json({
@@ -74,17 +75,36 @@ module.exports = () => {
 
     const getImage = async (req, res, next) => {
         const { _id } = req.params;
-
+        const { project_type } = req.query;
         
         let payload = await Collection.findOne({_id: _id, status: "working"})
         if (!payload) {
-            throw new Error("This payload is not working. Please try later")
+            next(new Error("This payload is not working. Please try later"));
+            return;
         }
 
         var arr = []
+        var min = 1, max = 1;
+        var id = ''
+        switch (project_type) {
+            case 'DE_DIEU':
+                max = 0
+                break;
+            case 'CAY_TRONG':
+                max = 77;
+                id = 'v1607244077/cay-trong/cay-trong'
+                break;
+            case 'CHAY_RUNG':
+                max = 110;
+                id = 'v1607243994/chay-rung/chay-rung'
+                break;
+            default:
+                max = 104
+                id = 'v1606833551/luoi-dien/day-dien'
+        }
 
-        for (var i = 1; i <= 104; i++) {
-            var url = `https://res.cloudinary.com/webtt20191/image/upload/v1606833551/day-dien-cao-the/day-dien-${i}.jpg`
+        for (var i = min; i <= max; i++) {
+            var url = `https://res.cloudinary.com/webtt20191/image/upload/${id}-${i}.jpg`
             var objective = randomDayDien()
 
             let data = {

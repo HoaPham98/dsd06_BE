@@ -8,6 +8,7 @@ const models = require('./models/payload');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var cors = require('cors');
+const { allowedNodeEnvironmentFlags } = require('process');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/payloadtype', require('./crud')(models.PayloadType));
+app.use('/api/sdcard', require('./crud')(models.SDCard));
 app.use('/api/payload', require('./services/payload.service')());
 app.use('/api/payloadregister', require('./services/register.service')());
 app.use('/api/payloadStat', require('./services/statistic.service')());
