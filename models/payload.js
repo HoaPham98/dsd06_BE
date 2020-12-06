@@ -61,6 +61,7 @@ const PayloadLoggingSchema = new Schema({
     type: { type: String, enum: ['working', 'idle', 'fixing', 'charging'], required: true },
     reason: String,
     droneId: String,
+    sdCardId: {type: ObjectId, ref: 'SDCard'},
     fee: Number
 });
 
