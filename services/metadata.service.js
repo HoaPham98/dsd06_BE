@@ -1,6 +1,8 @@
 const express = require('express');
+const axios = require('axios');
 
 const Collection = require('../models/payload').Payload;
+const Logging = require('../models/payload').PayloadLogging;
 
 const dedieuObjects = ["Đê Sông Hồng, km"]
 
@@ -56,13 +58,16 @@ module.exports = () => {
                 objective = randomDien();
         }
         let payload = await Collection.findOne({_id: _id, status: "working"})
-        if (!payload) {
+        let log = await Logging.findOne({payload: payload.id, finishedAt: null})
+        if (!payload || !log) {
             next(new Error("This payload is not working. Please try later"));
             return;
         }
+        let droneId = log.droneId || '5fbdb9e94e0fc003db237c99'
+        let droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/${droneId}/`);
 
         res.json({
-            object: objective,
+            object: droneMeta.data,
             config: {
                 panning: Math.floor(Math.random() * 341),
                 tilting: Math.floor(Math.random() * 111),
@@ -78,10 +83,12 @@ module.exports = () => {
         const { project_type } = req.query;
         
         let payload = await Collection.findOne({_id: _id, status: "working"})
-        if (!payload) {
+        let log = await Logging.findOne({payload: _id, finishedAt: null})
+        if (!payload || !log) {
             next(new Error("This payload is not working. Please try later"));
             return;
         }
+        let droneId = log.droneId
 
         var arr = []
         var min = 1, max = 1;
@@ -105,8 +112,9 @@ module.exports = () => {
 
         for (var i = min; i <= max; i++) {
             var url = `https://res.cloudinary.com/webtt20191/image/upload/${id}-${i}.jpg`
-            var objective = randomDayDien()
-
+            let droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/5fbdb9e94e0fc003db237c99/`);
+            var objective = droneMeta.data.data
+            objective.idDrone = droneId
             let data = {
                 image: url,
                 object: objective,
