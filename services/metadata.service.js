@@ -110,8 +110,9 @@ module.exports = () => {
                 id = 'v1606833551/luoi-dien/day-dien'
         }
 
-        for (var i = min; i <= max; i++) {
-            var url = `https://res.cloudinary.com/webtt20191/image/upload/${id}-${i}.jpg`
+        for (var i = min; i <= Math.min(max, 10); i++) {
+            let number = Math.floor(Math.random() * max);
+            var url = `https://res.cloudinary.com/webtt20191/image/upload/${id}-${number}.jpg`
             let droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/5fbdb9e94e0fc003db237c99/`);
             var objective = droneMeta.data.data
             objective.idDrone = droneId
