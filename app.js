@@ -28,6 +28,11 @@ app.use('/api/payloadregister', require('./services/register.service')());
 app.use('/api/payloadStat', require('./services/statistic.service')());
 app.use('/api/payloadMetadata', require('./services/metadata.service')());
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.json({ code: err.status || 500,  message: err.message });
