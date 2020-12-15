@@ -15,6 +15,8 @@ module.exports = () => {
             .exec((e, result) => {
             if (e) {
                 next(e)
+            } else if (!result){
+                next(new Error("Can't find any payload. Please check again"));
             } else {
                 res.send(result.histories);
             }

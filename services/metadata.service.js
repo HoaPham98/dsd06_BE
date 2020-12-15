@@ -89,6 +89,10 @@ module.exports = () => {
             return;
         }
         let droneId = log.droneId
+        if (!droneId) {
+            next(new Error("Can't find drone. Please check again"));
+            return;
+        }
 
         var arr = []
         var min = 1, max = 1;
