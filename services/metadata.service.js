@@ -99,7 +99,8 @@ module.exports = () => {
         var id = ''
         switch (project_type) {
             case 'DE_DIEU':
-                max = 0
+                max = 100
+                id = 'v1607437240/de-dieu/de-dieu'
                 break;
             case 'CAY_TRONG':
                 max = 77;
