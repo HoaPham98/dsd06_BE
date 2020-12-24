@@ -81,6 +81,12 @@ module.exports = () => {
     const getImage = async (req, res, next) => {
         const { _id } = req.params;
         const { project_type } = req.query;
+
+        let droneRequest = await axios.get('http://54.251.160.65:6789/droneState/getAllDroneActiveRealTime')
+        var bakDroneId = ''
+        if (Array.isArray(droneRequest.data) && droneRequest.data.length > 0) {
+            bakDroneId = droneRequest.data[0].idDrone
+        }
         
         let payload = await Collection.findOne({_id: _id, status: "working"})
         let log = await Logging.findOne({payload: _id, finishedAt: null})
@@ -121,7 +127,8 @@ module.exports = () => {
             let droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/${droneId}/`);
             var objective = droneMeta.data.data
             if (!objective) {
-                droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/5fbdb9e94e0fc003db237c99/`);
+                droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/${bakDroneId}/`);
+                droneId = bakDroneId
                 objective = droneMeta.data.data
             }
             
