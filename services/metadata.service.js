@@ -118,8 +118,17 @@ module.exports = () => {
         for (var i = min; i <= Math.min(max, 10); i++) {
             let number = Math.floor(Math.random() * max);
             var url = `https://res.cloudinary.com/webtt20191/image/upload/${id}-${number}.jpg`
-            let droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/5fbdb9e94e0fc003db237c99/`);
+            let droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/${droneId}/`);
             var objective = droneMeta.data.data
+            if (!objective) {
+                droneMeta = await axios.get(`http://skyrone.cf:6789/droneState/getParameterFlightRealTime/5fbdb9e94e0fc003db237c99/`);
+                objective = droneMeta.data.data
+            }
+            
+            if (!objective) {
+                next(new Error("Drone is not working. Please check again"));
+                return;
+            }
             objective.idDrone = droneId
             let data = {
                 image: url,
